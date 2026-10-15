@@ -5,9 +5,18 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import JsonResponse
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
+def health_check(request):
+    """Ultra-lightweight endpoint for uptime pingers, Render health check, and keep-awake crons."""
+    return JsonResponse({"status": "healthy", "service": "fixurdevice-backend"})
+
 urlpatterns = [
+    # Health checks / Ping endpoints (used to keep Render free tier awake 24/7)
+    path("healthz/", health_check, name="health_check"),
+    path("api/health/", health_check, name="api_health_check"),
+
     # Django Admin (for super-admin only)
     path("django-admin/", admin.site.urls),
 

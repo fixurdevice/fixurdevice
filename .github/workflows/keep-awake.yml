@@ -1,0 +1,29 @@
+name: Keep Render Backend Awake
+
+on:
+  schedule:
+    # Runs every 10 minutes to prevent Render free tier from sleeping (sleeps at 15m)
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  ping-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Backend Health Check
+        run: |
+          BACKEND_URL="${{ secrets.RENDER_BACKEND_URL }}"
+          if [ -z "$BACKEND_URL" ]; then
+            BACKEND_URL="https://fixurdevice-backend.onrender.com"
+          fi
+          echo "Pinging backend at $BACKEND_URL/healthz/..."
+          RESPONSE=$(curl -s -w "\n%{http_code}" --max-time 45 "$BACKEND_URL/healthz/" || echo -e "\n000")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          echo "Response code: $HTTP_CODE"
+          echo "Response body: $BODY"
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 400 ]; then
+            echo "✅ Backend is awake and responsive!"
+          else
+            echo "⚠️ Backend wakeup request sent (status: $HTTP_CODE)."
+          fi

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
+import BackendPinger from "./components/BackendPinger";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -134,7 +135,10 @@ export default function RootLayout({
         {/* Google Tag Manager placeholder */}
         {/* GTM will be configured with actual GTM ID */}
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <BackendPinger />
+        {children}
+      </body>
     </html>
   );
 }
