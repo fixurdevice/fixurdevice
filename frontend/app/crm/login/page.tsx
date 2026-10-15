@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Wrench, Eye, EyeOff, Shield, AlertCircle, ArrowRight, KeyRound, CheckCircle2 } from "lucide-react";
+import { Wrench, Eye, EyeOff, Shield, AlertCircle, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export default function CRMLoginPage() {
   const router = useRouter();
@@ -23,12 +23,6 @@ export default function CRMLoginPage() {
       }
     }
   }, [router]);
-
-  const fillSuperadmin = () => {
-    setUsername("admin");
-    setPassword("admin1234");
-    setError("");
-  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -240,49 +234,6 @@ export default function CRMLoginPage() {
             </p>
           </div>
 
-          {/* Superadmin Credentials Quick Helper */}
-          <div
-            onClick={fillSuperadmin}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "0.75rem 1rem",
-              background: "rgba(108, 63, 255, 0.15)",
-              border: "1px solid rgba(108, 63, 255, 0.35)",
-              borderRadius: "14px",
-              marginBottom: "1.5rem",
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-            }}
-            title="Click to auto-fill superadmin credentials"
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-              <KeyRound size={16} color="#a78bfa" />
-              <div>
-                <div style={{ fontSize: "0.75rem", color: "#a78bfa", fontWeight: 700, textTransform: "uppercase" }}>
-                  Superadmin Login Info
-                </div>
-                <div style={{ fontSize: "0.8125rem", color: "white", fontWeight: 500 }}>
-                  User ID: <span style={{ color: "#38bdf8", fontWeight: 700 }}>admin</span> • Password: <span style={{ color: "#38bdf8", fontWeight: 700 }}>admin1234</span>
-                </div>
-              </div>
-            </div>
-            <span
-              style={{
-                fontSize: "0.75rem",
-                background: "var(--brand-purple)",
-                color: "white",
-                padding: "0.25rem 0.6rem",
-                borderRadius: "var(--border-radius-full)",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-              }}
-            >
-              Auto Fill
-            </span>
-          </div>
-
           {/* Feedback Messages */}
           {error && (
             <div
@@ -342,7 +293,7 @@ export default function CRMLoginPage() {
               <input
                 id="crm-username"
                 type="text"
-                placeholder="admin"
+                placeholder="Enter your User ID or email"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 autoComplete="username"
@@ -382,15 +333,12 @@ export default function CRMLoginPage() {
                 >
                   Password
                 </label>
-                <span style={{ fontSize: "0.75rem", color: "rgba(255, 255, 255, 0.4)" }}>
-                  Default: admin1234
-                </span>
               </div>
               <div style={{ position: "relative" }}>
                 <input
                   id="crm-password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="admin1234"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"

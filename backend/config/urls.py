@@ -12,8 +12,19 @@ def health_check(request):
     """Ultra-lightweight endpoint for uptime pingers, Render health check, and keep-awake crons."""
     return JsonResponse({"status": "healthy", "service": "fixurdevice-backend"})
 
+def root_view(request):
+    """Root endpoint for Render health checkers and API discovery."""
+    return JsonResponse({
+        "status": "healthy",
+        "service": "FixUrDevice Backend API",
+        "version": "1.0.0",
+        "docs": "/api/docs/",
+        "health": "/healthz/",
+    })
+
 urlpatterns = [
-    # Health checks / Ping endpoints (used to keep Render free tier awake 24/7)
+    # Root & Health check endpoints (used by Render health check and keep-awake crons)
+    path("", root_view, name="root"),
     path("healthz/", health_check, name="health_check"),
     path("api/health/", health_check, name="api_health_check"),
 
