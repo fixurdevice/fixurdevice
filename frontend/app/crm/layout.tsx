@@ -65,7 +65,7 @@ const navGroups = [
   },
 ];
 
-export default function CRMLayout({ children }: { children: React.ReactNode }) {
+function CRMLayoutInner({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isAuth, setIsAuth] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
@@ -566,5 +566,29 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
         }
       `}</style>
     </div>
+  );
+}
+
+export default function CRMLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense
+      fallback={
+        <div
+          style={{
+            minHeight: "100vh",
+            background: "#090d16",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#94a3b8",
+            fontSize: "0.875rem",
+          }}
+        >
+          Loading CRM...
+        </div>
+      }
+    >
+      <CRMLayoutInner>{children}</CRMLayoutInner>
+    </Suspense>
   );
 }

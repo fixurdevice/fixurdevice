@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import {
   ArrowLeft,
   Phone,
@@ -75,7 +76,9 @@ const SOURCE_LABELS: Record<string, string> = {
   other: "Other",
 };
 
-export default function LeadDetailPage({ params }: { params: { id: string } }) {
+export default function LeadDetailPage() {
+  const urlParams = useParams();
+  const leadId = (urlParams?.id as string) || "";
   const [lead, setLead] = useState<LeadData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -103,10 +106,11 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
   const [callbackNotes, setCallbackNotes] = useState("");
 
   const fetchLead = async () => {
+    if (!leadId) return;
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/v1/leads/${params.id}/`);
+      const res = await fetch(`${API_BASE}/api/v1/leads/${leadId}/`);
       if (!res.ok) throw new Error("Could not find lead record");
       const data = await res.json();
       setLead(data);
@@ -120,10 +124,10 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
   };
 
   useEffect(() => {
-    if (params?.id) {
+    if (leadId) {
       fetchLead();
     }
-  }, [params?.id]);
+  }, [leadId]);
 
   const submitAction = async (actionType: "interested" | "not_interested" | "wrong_number" | "callback") => {
     if (!lead) return;

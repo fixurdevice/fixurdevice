@@ -630,6 +630,10 @@ type ServicePageProps = {
   params: Promise<{ slug: string }>;
 };
 
+export function generateStaticParams() {
+  return Object.keys(serviceData).map((slug) => ({ slug }));
+}
+
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { slug } = await params;
   const service = serviceData[slug];
