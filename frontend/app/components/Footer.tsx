@@ -40,6 +40,7 @@ const footerLinks = {
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
     { label: "Book a Repair", href: "/book-repair" },
+    { label: "Staff CRM Login", href: "/crm/login" },
   ],
   legal: [
     { label: "Privacy Policy", href: "/privacy-policy" },
