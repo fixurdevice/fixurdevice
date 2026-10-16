@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { getApiUrl } from "../../../lib/api";
 import {
   ArrowLeft,
   Phone,
@@ -64,7 +65,7 @@ interface LeadData {
   updated_at: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = getApiUrl();
 
 const SOURCE_LABELS: Record<string, string> = {
   google_ads: "Google Ads",

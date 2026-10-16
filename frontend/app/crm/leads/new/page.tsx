@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getApiUrl } from "../../../lib/api";
 import {
   ArrowLeft,
   User,
@@ -76,7 +77,7 @@ export default function NewLeadPage() {
     setSubmitting(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const apiUrl = getApiUrl();
       const referenceId = `FUD-${new Date().getFullYear().toString().slice(-2)}${String(new Date().getMonth() + 1).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}-W${Math.floor(1000 + Math.random() * 9000)}`;
       let createdRef = referenceId;
 

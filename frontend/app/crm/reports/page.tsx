@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../../lib/api";
 import {
   TrendingUp,
   DollarSign,
@@ -123,7 +124,7 @@ export default function ReportsAndAnalyticsPage() {
   const [exportType, setExportType] = useState<"master" | "repairs" | "invoices" | "reworks" | "leads">("master");
   const [exportScope, setExportScope] = useState<"current_filter" | "today" | "all">("current_filter");
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const apiUrl = getApiUrl();
 
   // Fetch live data
   const fetchData = async () => {

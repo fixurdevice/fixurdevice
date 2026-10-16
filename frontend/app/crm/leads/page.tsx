@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../../lib/api";
 import {
   Search,
   Filter,
@@ -147,7 +148,7 @@ export default function LeadsPage() {
   const [walkinSource, setWalkinSource] = useState("walk_in");
   const [walkinNotes, setWalkinNotes] = useState("");
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const apiUrl = getApiUrl();
 
   const showNotification = (msg: string, isError = false) => {
     if (isError) {

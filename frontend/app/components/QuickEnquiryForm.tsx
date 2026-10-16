@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../lib/api";
 import { ArrowRight, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
 export default function QuickEnquiryForm() {
@@ -32,7 +33,7 @@ export default function QuickEnquiryForm() {
     setLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const apiUrl = getApiUrl();
       const payload = {
         customer_name: name.trim(),
         customer_phone: phone.trim(),

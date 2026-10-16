@@ -3,6 +3,7 @@ import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Link from "next/link";
+import { getApiUrl } from "../lib/api";
 import {
   CheckCircle2,
   ArrowRight,
@@ -499,8 +500,9 @@ export default function BookRepairPage() {
         gclid: new URLSearchParams(window.location.search).get("gclid") || "",
       };
 
+      const apiUrl = getApiUrl();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/public/enquiry/submit/`,
+        `${apiUrl}/api/public/enquiry/submit/`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

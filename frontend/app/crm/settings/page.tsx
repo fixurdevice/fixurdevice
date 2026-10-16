@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../../lib/api";
 import {
   Settings,
   Building,
@@ -40,7 +41,7 @@ export default function SettingsPage() {
       "⚠️ Are you sure you want to clear all data in SQLite database? This will completely wipe all leads, repair orders, invoices, and customer records from Django SQLite (db.sqlite3) so you can start with 100% fresh data."
     );
     if (confirmPrompt) {
-      const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const API_BASE = getApiUrl();
       try {
         await Promise.allSettled([
           fetch(`${API_BASE}/api/v1/leads/clear/`, { method: "POST" }),

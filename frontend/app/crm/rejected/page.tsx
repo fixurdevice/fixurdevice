@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../../lib/api";
 import {
   XCircle,
   Search,
@@ -56,7 +57,7 @@ export default function RejectedPage() {
   const [reopenTarget, setReopenTarget] = useState<"new" | "interested" | "callback_later">("new");
   const [reopenNotes, setReopenNotes] = useState("");
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const apiUrl = getApiUrl();
 
   const showNotification = (msg: string, isError = false) => {
     if (isError) {

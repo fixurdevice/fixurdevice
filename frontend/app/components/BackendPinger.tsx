@@ -1,24 +1,28 @@
 "use client";
 import { useEffect } from "react";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { getApiUrl } from "../lib/api";
 
 /**
- * Lightweight client-side pinger that warms up the Render backend
+ * Lightweight client-side pinger that warms up the remote Render backend
  * as soon as any user loads the website.
  */
 export default function BackendPinger() {
   useEffect(() => {
-    // Non-blocking ping to wake up free-tier backend if it is asleep
+    const apiUrl = getApiUrl();
+    // Only ping remote backend (e.g. Render free-tier sleep); skip local dev to prevent ERR_CONNECTION_REFUSED
+    if (!apiUrl || apiUrl.includes("localhost") || apiUrl.includes("127.0.0.1")) {
+      return;
+    }
+
     try {
-      fetch(`${API_BASE}/healthz/`, {
+      fetch(`${apiUrl}/healthz/`, {
         method: "GET",
         mode: "cors",
         cache: "no-store",
       }).catch(() => {
         // Silent fail — no user disruption
       });
-    } catch (e) {
+    } catch {
       // Ignore
     }
   }, []);

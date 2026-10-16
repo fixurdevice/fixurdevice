@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../../lib/api";
 import {
   Users,
   Wrench,
@@ -58,11 +59,12 @@ export default function CRMDashboard() {
   const [activeBookings, setActiveBookings] = useState<any[]>([]);
   const [dueCallbacks, setDueCallbacks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const [connectionError, setConnectionError] = useState<string | null>(null);
 
   const loadDashboardData = useCallback(async () => {
+    const apiUrl = getApiUrl();
     setLoading(true);
+    setConnectionError(null);
     try {
       const [statsRes, leadsRes, repairsRes] = await Promise.all([
         fetch(`${apiUrl}/api/v1/leads/stats/`),
@@ -89,12 +91,15 @@ export default function CRMDashboard() {
         const cbData = await cbRes.json();
         setDueCallbacks(Array.isArray(cbData) ? cbData.slice(0, 5) : (cbData.results || []).slice(0, 5));
       }
-    } catch (err) {
-      console.error("Dashboard fetch error:", err);
+    } catch (err: any) {
+      console.warn("CRM Dashboard data fetch notice:", err?.message || err);
+      setConnectionError(
+        "Backend server is currently connecting or warming up on Render. If it was sleeping, please wait a few seconds and click Retry."
+      );
     } finally {
       setLoading(false);
     }
-  }, [apiUrl]);
+  }, []);
 
   useEffect(() => {
     loadDashboardData();
@@ -137,6 +142,49 @@ export default function CRMDashboard() {
           </Link>
         </div>
       </div>
+
+      {connectionError && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            background: "#fffbeb",
+            border: "1px solid #fde68a",
+            borderRadius: "10px",
+            padding: "0.875rem 1.25rem",
+            marginBottom: "1.5rem",
+            gap: "1rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <AlertCircle size={20} color="#d97706" />
+            <div style={{ fontSize: "0.875rem", color: "#92400e" }}>
+              <strong>Notice:</strong> {connectionError}
+            </div>
+          </div>
+          <button
+            onClick={() => loadDashboardData()}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.35rem",
+              background: "#d97706",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              padding: "0.4rem 0.85rem",
+              fontSize: "0.8125rem",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+            Retry Connection
+          </button>
+        </div>
+      )}
 
       {/* KPI Cards Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem", marginBottom: "1.75rem" }}>

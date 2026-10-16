@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../../lib/api";
 import {
   Wrench,
   User,
@@ -28,7 +29,7 @@ interface DbTechnician {
   active_jobs_count: number;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = getApiUrl();
 
 export default function TechniciansPage() {
   const [techList, setTechList] = useState<DbTechnician[]>([]);

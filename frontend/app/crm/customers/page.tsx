@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../../lib/api";
 import {
   Users,
   Search,
@@ -146,7 +147,7 @@ interface BookingHistoryItem {
   updated_at?: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = getApiUrl();
 
 // Helper: Normalize 10-digit phone number for matching
 const normalizePhone = (p: string) => {

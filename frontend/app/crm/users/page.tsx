@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../../lib/api";
 import {
   Users,
   UserPlus,
@@ -57,7 +58,7 @@ export default function UsersPage() {
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const apiUrl = getApiUrl();
 
   const showNotification = (msg: string, isError = false) => {
     if (isError) {

@@ -215,7 +215,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https:\/\/.*\.vercel\.app$",
     r"^https:\/\/.*\.onrender\.com$",
-    r"^https:\/\/.*\.fixurdevice\.in$",
+    r"^https:\/\/(?:[a-zA-Z0-9-]+\.)?fixurdevice\.in$",
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
@@ -240,6 +240,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.vercel.app",
     "https://*.onrender.com",
     "https://*.fixurdevice.in",
+    "https://fixurdevice.in",
+    "https://www.fixurdevice.in",
 ]
 
 # ─── Email ────────────────────────────────────────────────────────────────────

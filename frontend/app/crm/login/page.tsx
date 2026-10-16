@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { getApiUrl } from "../../lib/api";
 import { Wrench, Eye, EyeOff, Shield, AlertCircle, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export default function CRMLoginPage() {
@@ -38,7 +39,7 @@ export default function CRMLoginPage() {
     setError("");
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const apiUrl = getApiUrl();
       let loginSuccess = false;
       let userData = null;
       let userToken = "";

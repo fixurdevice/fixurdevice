@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../../lib/api";
 import {
   PhoneCall,
   Search,
@@ -90,7 +91,7 @@ export default function CallbacksPage() {
   const [rejectReason, setRejectReason] = useState("Price too high");
   const [rejectNotes, setRejectNotes] = useState("");
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const apiUrl = getApiUrl();
 
   const showNotification = (msg: string, isError = false) => {
     if (isError) {

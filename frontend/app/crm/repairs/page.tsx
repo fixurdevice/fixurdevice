@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../../lib/api";
 import {
   Wrench,
   Search,
@@ -147,7 +148,7 @@ export default function BookingsPage() {
   const [invoiceWarranty, setInvoiceWarranty] = useState("90 Days Service & Replacement Warranty");
   const [invoicePaymentStatus, setInvoicePaymentStatus] = useState("paid");
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const apiUrl = getApiUrl();
 
   const showNotification = (msg: string, isError = false) => {
     if (isError) {
