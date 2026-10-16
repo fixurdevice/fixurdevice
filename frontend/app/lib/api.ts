@@ -19,12 +19,12 @@ export function getApiUrl(): string {
       return "http://localhost:8000";
     }
     // Production deployments (e.g. fixurdevice.in, vercel.app, etc.)
-    return "https://fixurdevice.onrender.com";
+    return "https://fixurdevice-ga9v.onrender.com";
   }
 
   // 3. Server-side SSR/SSG build phase
   if (process.env.NODE_ENV === "production") {
-    return "https://fixurdevice.onrender.com";
+    return "https://fixurdevice-ga9v.onrender.com";
   }
 
   return "http://localhost:8000";
