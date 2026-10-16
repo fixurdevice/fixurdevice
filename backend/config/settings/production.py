@@ -15,8 +15,12 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # WhiteNoise for static files
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Production email backend
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# Production email backend (defaults to SMTP if credentials exist, otherwise console)
+if os.environ.get("EMAIL_HOST_USER") and os.environ.get("EMAIL_HOST_PASSWORD"):
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+else:
+    EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+EMAIL_TIMEOUT = 5
 
 # Sentry integration (optional — add SENTRY_DSN to env)
 SENTRY_DSN = os.environ.get("SENTRY_DSN")

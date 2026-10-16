@@ -141,12 +141,19 @@ def submit_enquiry(request):
                 status=LeadStatus.NEW,
             )
 
-        # Lead is safely saved — dispatch email notification immediately to fixurdevice.in@gmail.com
+        # Lead is safely saved — dispatch email notification in background thread
+        # so HTTP response returns immediately and never triggers worker timeouts.
         try:
+            import threading
             from apps.notifications.tasks import send_lead_email
-            send_lead_email(str(lead.id))
+            email_thread = threading.Thread(
+                target=send_lead_email,
+                args=(str(lead.id),),
+                daemon=True,
+            )
+            email_thread.start()
         except Exception as notify_err:
-            logger.error("Direct email notification failed for %s: %s", lead.reference, notify_err)
+            logger.error("Direct email thread dispatch failed for %s: %s", lead.reference, notify_err)
 
         logger.info("New lead created: %s (customer: %s)", lead.reference, customer.phone[-4:])
 

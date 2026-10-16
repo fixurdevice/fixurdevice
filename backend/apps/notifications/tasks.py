@@ -40,6 +40,18 @@ def send_lead_email(lead_id: str) -> bool:
     )
 
     try:
+        # If using SMTP backend, ensure credentials are present
+        backend_str = getattr(settings, "EMAIL_BACKEND", "")
+        if "smtp" in backend_str.lower():
+            host_user = getattr(settings, "EMAIL_HOST_USER", "")
+            host_pass = getattr(settings, "EMAIL_HOST_PASSWORD", "")
+            if not host_user or not host_pass:
+                log.status = NotificationLog.Status.FAILED
+                log.failure_reason = "SMTP credentials (EMAIL_HOST_USER / EMAIL_HOST_PASSWORD) not configured."
+                log.save(update_fields=["status", "failure_reason"])
+                logger.warning("SMTP credentials not configured. Skipping email dispatch for %s", lead.reference)
+                return False
+
         from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "fixurdevice.in@gmail.com")
         msg = EmailMultiAlternatives(
             subject=subject,
