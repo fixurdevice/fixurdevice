@@ -15,12 +15,19 @@ export default function CRMLoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  // If already logged in, redirect to dashboard
+  // If already logged in with a valid token, redirect to dashboard
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("crm_token");
       if (token) {
-        router.replace("/crm/dashboard");
+        if (token.startsWith("admin-session-")) {
+          // Clear stale mock token from previous sessions
+          localStorage.removeItem("crm_token");
+          localStorage.removeItem("crm_user");
+          document.cookie = "crm_token=; path=/; max-age=0";
+        } else {
+          router.replace("/crm/dashboard");
+        }
       }
     }
   }, [router]);
@@ -63,34 +70,19 @@ export default function CRMLoginPage() {
           loginSuccess = true;
         } else {
           const errData = await res.json().catch(() => ({}));
-          // If credentials match standard superadmin credentials
-          if (cleanUsername === "admin" && cleanPassword === "admin1234") {
-            loginSuccess = true;
-            userToken = "admin-session-" + Date.now();
-            userData = {
-              id: 1,
-              full_name: "Super Admin",
-              email: "admin@fixurdevice.in",
-              role: "admin",
-            };
-          } else {
-            throw new Error(errData.detail || errData.non_field_errors?.[0] || "Invalid User ID or password.");
-          }
+          throw new Error(
+            errData.detail ||
+            errData.non_field_errors?.[0] ||
+            "Invalid credentials. Please verify your username (or admin@fixurdevice.in) and password."
+          );
         }
       } catch (networkErr: any) {
-        // Fallback for offline/local admin login
-        if (cleanUsername === "admin" && cleanPassword === "admin1234") {
-          loginSuccess = true;
-          userToken = "admin-session-" + Date.now();
-          userData = {
-            id: 1,
-            full_name: "Super Admin",
-            email: "admin@fixurdevice.in",
-            role: "admin",
-          };
-        } else {
+        if (networkErr.message && !networkErr.message.includes("Failed to fetch") && !networkErr.message.includes("NetworkError")) {
           throw networkErr;
         }
+        throw new Error(
+          "Backend server is currently warming up on Render. Please wait 10-20 seconds and click Sign In again."
+        );
       }
 
       if (loginSuccess && userToken) {
@@ -100,7 +92,9 @@ export default function CRMLoginPage() {
         document.cookie = `crm_token=${userToken}; path=/; max-age=86400; SameSite=Lax`;
         
         setTimeout(() => {
-          window.location.href = "/crm/dashboard";
+          const params = new URLSearchParams(window.location.search);
+          const redirect = params.get("redirect");
+          window.location.href = redirect || "/crm/dashboard";
         }, 400);
       }
     } catch (err: any) {

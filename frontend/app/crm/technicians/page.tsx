@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   Wrench,
   User,
@@ -46,7 +46,7 @@ export default function TechniciansPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/v1/repairs/technicians/`);
+      const res = await authFetch(`${API_BASE}/api/v1/repairs/technicians/`);
       if (!res.ok) throw new Error("Failed to load technicians");
       const data = await res.json();
       setTechList(data);
@@ -68,7 +68,7 @@ export default function TechniciansPage() {
 
     setSaving(true);
     try {
-      const res = await fetch(`${API_BASE}/api/v1/repairs/technicians/`, {
+      const res = await authFetch(`${API_BASE}/api/v1/repairs/technicians/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

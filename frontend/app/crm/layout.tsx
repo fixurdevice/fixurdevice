@@ -69,7 +69,8 @@ function CRMLayoutInner({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isAuth, setIsAuth] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
-      return Boolean(localStorage.getItem("crm_token") || document.cookie.includes("crm_token="));
+      const token = localStorage.getItem("crm_token");
+      return Boolean(token && !token.startsWith("admin-session-"));
     }
     return true;
   });
@@ -96,8 +97,10 @@ function CRMLayoutInner({ children }: { children: React.ReactNode }) {
     // Check token in localStorage or cookie
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("crm_token");
-      if (!token && !document.cookie.includes("crm_token=")) {
+      if (!token || token.startsWith("admin-session-")) {
         setIsAuth(false);
+        localStorage.removeItem("crm_token");
+        localStorage.removeItem("crm_user");
         router.replace("/crm/login");
       } else {
         setIsAuth(true);

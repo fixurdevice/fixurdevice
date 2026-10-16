@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   TrendingUp,
   DollarSign,
@@ -131,9 +131,9 @@ export default function ReportsAndAnalyticsPage() {
     setLoading(true);
     try {
       const [repairsRes, invoicesRes, leadsRes] = await Promise.all([
-        fetch(`${apiUrl}/api/v1/repairs/`),
-        fetch(`${apiUrl}/api/v1/payments/invoices/`),
-        fetch(`${apiUrl}/api/v1/leads/`),
+        authFetch(`${apiUrl}/api/v1/repairs/`),
+        authFetch(`${apiUrl}/api/v1/payments/invoices/`),
+        authFetch(`${apiUrl}/api/v1/leads/`),
       ]);
 
       let repairsData: RepairBooking[] = [];

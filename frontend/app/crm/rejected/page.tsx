@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   XCircle,
   Search,
@@ -72,7 +72,7 @@ export default function RejectedPage() {
   const loadRejectedLeads = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${apiUrl}/api/v1/leads/?status=rejected`);
+      const res = await authFetch(`${apiUrl}/api/v1/leads/?status=rejected`);
       if (res.ok) {
         const data = await res.json();
         const results = Array.isArray(data) ? data : data.results || [];
@@ -97,7 +97,7 @@ export default function RejectedPage() {
     if (!reopenLead) return;
 
     try {
-      const res = await fetch(`${apiUrl}/api/v1/leads/${reopenLead.id}/action/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/leads/${reopenLead.id}/action/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getApiUrl } from "../../../lib/api";
+import { getApiUrl, authFetch } from "../../../lib/api";
 import {
   ArrowLeft,
   User,
@@ -98,7 +98,7 @@ export default function NewLeadPage() {
       };
 
       try {
-        const leadRes = await fetch(`${apiUrl}/api/v1/leads/`, {
+        const leadRes = await authFetch(`${apiUrl}/api/v1/leads/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -121,7 +121,7 @@ export default function NewLeadPage() {
         // If walk-in or immediate repair, create repair order directly in SQLite
         if (serviceType === "walk_in_store") {
           const labor = Math.max(0, (parseFloat(estimatedQuote) || 0) - (parseFloat(partCost) || 0));
-          await fetch(`${apiUrl}/api/v1/repairs/`, {
+          await authFetch(`${apiUrl}/api/v1/repairs/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

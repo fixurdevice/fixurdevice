@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   Search,
   Filter,
@@ -175,9 +175,9 @@ export default function LeadsPage() {
     setLoading(true);
     try {
       const [leadsRes, techRes, vendorsRes] = await Promise.all([
-        fetch(`${apiUrl}/api/v1/leads/`),
-        fetch(`${apiUrl}/api/v1/repairs/technicians/`),
-        fetch(`${apiUrl}/api/v1/parts/vendors/`),
+        authFetch(`${apiUrl}/api/v1/leads/`),
+        authFetch(`${apiUrl}/api/v1/repairs/technicians/`),
+        authFetch(`${apiUrl}/api/v1/parts/vendors/`),
       ]);
 
       if (leadsRes.ok) {
@@ -215,7 +215,7 @@ export default function LeadsPage() {
     if (!vName) return;
     setAddingVendor(true);
     try {
-      const res = await fetch(`${apiUrl}/api/v1/parts/vendors/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/parts/vendors/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: vName }),
@@ -320,7 +320,7 @@ export default function LeadsPage() {
     }
 
     try {
-      const res = await fetch(`${apiUrl}/api/v1/leads/${activeLead.id}/action/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/leads/${activeLead.id}/action/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -352,7 +352,7 @@ export default function LeadsPage() {
   const handleDeleteLead = async () => {
     if (!deleteConfirmLead) return;
     try {
-      const res = await fetch(`${apiUrl}/api/v1/leads/${deleteConfirmLead.id}/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/leads/${deleteConfirmLead.id}/`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: deleteReason }),
@@ -381,7 +381,7 @@ export default function LeadsPage() {
     }
 
     try {
-      const res = await fetch(`${apiUrl}/api/v1/leads/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/leads/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

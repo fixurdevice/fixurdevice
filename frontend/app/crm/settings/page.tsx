@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   Settings,
   Building,
@@ -44,10 +44,10 @@ export default function SettingsPage() {
       const API_BASE = getApiUrl();
       try {
         await Promise.allSettled([
-          fetch(`${API_BASE}/api/v1/leads/clear/`, { method: "POST" }),
-          fetch(`${API_BASE}/api/v1/repairs/clear/`, { method: "POST" }),
-          fetch(`${API_BASE}/api/v1/payments/clear/`, { method: "POST" }),
-          fetch(`${API_BASE}/api/v1/customers/clear/`, { method: "POST" }),
+          authFetch(`${API_BASE}/api/v1/leads/clear/`, { method: "POST" }),
+          authFetch(`${API_BASE}/api/v1/repairs/clear/`, { method: "POST" }),
+          authFetch(`${API_BASE}/api/v1/payments/clear/`, { method: "POST" }),
+          authFetch(`${API_BASE}/api/v1/customers/clear/`, { method: "POST" }),
         ]);
       } catch (err) {
         console.error("Error clearing database data:", err);

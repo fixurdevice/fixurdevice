@@ -7,7 +7,7 @@ export default function CRMIndexPage() {
 
   useEffect(() => {
     const token = typeof window !== "undefined" ? localStorage.getItem("crm_token") : null;
-    if (token) {
+    if (token && !token.startsWith("admin-session-")) {
       router.replace("/crm/dashboard");
     } else {
       router.replace("/crm/login");

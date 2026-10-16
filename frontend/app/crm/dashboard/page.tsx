@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   Users,
   Wrench,
@@ -67,9 +67,9 @@ export default function CRMDashboard() {
     setConnectionError(null);
     try {
       const [statsRes, leadsRes, repairsRes] = await Promise.all([
-        fetch(`${apiUrl}/api/v1/leads/stats/`),
-        fetch(`${apiUrl}/api/v1/leads/?status=new`),
-        fetch(`${apiUrl}/api/v1/repairs/?status=in_progress`),
+        authFetch(`${apiUrl}/api/v1/leads/stats/`),
+        authFetch(`${apiUrl}/api/v1/leads/?status=new`),
+        authFetch(`${apiUrl}/api/v1/repairs/?status=in_progress`),
       ]);
 
       if (statsRes.ok) {
@@ -86,7 +86,7 @@ export default function CRMDashboard() {
       }
 
       // Fetch due callbacks
-      const cbRes = await fetch(`${apiUrl}/api/v1/leads/?status=callback_later`);
+      const cbRes = await authFetch(`${apiUrl}/api/v1/leads/?status=callback_later`);
       if (cbRes.ok) {
         const cbData = await cbRes.json();
         setDueCallbacks(Array.isArray(cbData) ? cbData.slice(0, 5) : (cbData.results || []).slice(0, 5));

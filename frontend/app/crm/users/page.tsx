@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   Users,
   UserPlus,
@@ -84,7 +84,7 @@ export default function UsersPage() {
   const loadUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${apiUrl}/api/v1/auth/users/`);
+      const res = await authFetch(`${apiUrl}/api/v1/auth/users/`);
       if (res.ok) {
         const data = await res.json();
         const results = Array.isArray(data) ? data : data.results || [];
@@ -116,7 +116,7 @@ export default function UsersPage() {
 
     setSubmitting(true);
     try {
-      const res = await fetch(`${apiUrl}/api/v1/auth/users/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/auth/users/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -157,7 +157,7 @@ export default function UsersPage() {
     }
 
     try {
-      const res = await fetch(`${apiUrl}/api/v1/auth/users/${user.id}/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/auth/users/${user.id}/`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ is_active: !user.is_active }),

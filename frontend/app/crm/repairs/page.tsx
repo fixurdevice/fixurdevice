@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   Wrench,
   Search,
@@ -164,9 +164,9 @@ export default function BookingsPage() {
     setLoading(true);
     try {
       const [bookingsRes, techsRes, vendorsRes] = await Promise.all([
-        fetch(`${apiUrl}/api/v1/repairs/`),
-        fetch(`${apiUrl}/api/v1/repairs/technicians/`),
-        fetch(`${apiUrl}/api/v1/parts/vendors/`),
+        authFetch(`${apiUrl}/api/v1/repairs/`),
+        authFetch(`${apiUrl}/api/v1/repairs/technicians/`),
+        authFetch(`${apiUrl}/api/v1/parts/vendors/`),
       ]);
 
       if (bookingsRes.ok) {
@@ -222,7 +222,7 @@ export default function BookingsPage() {
         internal_notes: `[Completed]: Payment: ${completionPaymentDone ? "Received in full" : "Pending"} | Delivery: ${completionDelivered ? "Delivered to customer" : "Ready for pickup"}. ${completingBooking.internal_notes || ""}`.trim(),
       };
 
-      const res = await fetch(`${apiUrl}/api/v1/repairs/${completingBooking.id}/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/repairs/${completingBooking.id}/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -236,7 +236,7 @@ export default function BookingsPage() {
       // Auto-generate invoice if requested and doesn't exist
       if (completionGenInvoice && !completingBooking.has_invoice) {
         try {
-          await fetch(`${apiUrl}/api/v1/payments/invoices/`, {
+          await authFetch(`${apiUrl}/api/v1/payments/invoices/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -277,7 +277,7 @@ export default function BookingsPage() {
     if (!vName) return;
     setAddingVendor(true);
     try {
-      const res = await fetch(`${apiUrl}/api/v1/parts/vendors/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/parts/vendors/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: vName }),
@@ -332,7 +332,7 @@ export default function BookingsPage() {
       const vCost = Number(editVendorCost) || 0;
       const margin = Math.max(0, custPrice - vCost);
 
-      const res = await fetch(`${apiUrl}/api/v1/repairs/${editingBooking.id}/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/repairs/${editingBooking.id}/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -372,7 +372,7 @@ export default function BookingsPage() {
   // Quick Technician Reassignment
   const handleReassignTech = async (bookingId: string, techId: string) => {
     try {
-      const res = await fetch(`${apiUrl}/api/v1/repairs/${bookingId}/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/repairs/${bookingId}/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ assigned_technician: techId ? Number(techId) : null }),
@@ -399,7 +399,7 @@ export default function BookingsPage() {
     }
 
     try {
-      const res = await fetch(`${apiUrl}/api/v1/repairs/${reworkBooking.id}/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/repairs/${reworkBooking.id}/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -428,7 +428,7 @@ export default function BookingsPage() {
     if (!invoiceBooking) return;
 
     try {
-      const res = await fetch(`${apiUrl}/api/v1/payments/invoices/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/payments/invoices/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

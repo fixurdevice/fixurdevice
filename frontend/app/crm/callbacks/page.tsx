@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   PhoneCall,
   Search,
@@ -106,7 +106,7 @@ export default function CallbacksPage() {
   const loadCallbacks = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${apiUrl}/api/v1/leads/?status=callback_later`);
+      const res = await authFetch(`${apiUrl}/api/v1/leads/?status=callback_later`);
       if (res.ok) {
         const data = await res.json();
         const results = Array.isArray(data) ? data : data.results || [];
@@ -131,7 +131,7 @@ export default function CallbacksPage() {
     if (!rescheduleLead) return;
 
     try {
-      const res = await fetch(`${apiUrl}/api/v1/leads/${rescheduleLead.id}/reschedule-callback/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/leads/${rescheduleLead.id}/reschedule-callback/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -161,7 +161,7 @@ export default function CallbacksPage() {
     if (!convertLead) return;
 
     try {
-      const res = await fetch(`${apiUrl}/api/v1/leads/${convertLead.id}/action/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/leads/${convertLead.id}/action/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -192,7 +192,7 @@ export default function CallbacksPage() {
     if (!rejectLead) return;
 
     try {
-      const res = await fetch(`${apiUrl}/api/v1/leads/${rejectLead.id}/action/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/leads/${rejectLead.id}/action/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -218,7 +218,7 @@ export default function CallbacksPage() {
   // Mark Wrong Number
   const handleMarkWrongNumber = async (leadId: string, leadRef: string) => {
     try {
-      const res = await fetch(`${apiUrl}/api/v1/leads/${leadId}/action/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/leads/${leadId}/action/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

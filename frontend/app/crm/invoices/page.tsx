@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   FileText,
   Search,
@@ -104,8 +104,8 @@ export default function InvoicesPage() {
     setLoading(true);
     try {
       const [invRes, bookRes] = await Promise.all([
-        fetch(`${apiUrl}/api/v1/payments/invoices/`),
-        fetch(`${apiUrl}/api/v1/repairs/?status=completed`),
+        authFetch(`${apiUrl}/api/v1/payments/invoices/`),
+        authFetch(`${apiUrl}/api/v1/repairs/?status=completed`),
       ]);
 
       if (invRes.ok) {
@@ -141,7 +141,7 @@ export default function InvoicesPage() {
     if (!booking) return;
 
     try {
-      const res = await fetch(`${apiUrl}/api/v1/payments/invoices/`, {
+      const res = await authFetch(`${apiUrl}/api/v1/payments/invoices/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

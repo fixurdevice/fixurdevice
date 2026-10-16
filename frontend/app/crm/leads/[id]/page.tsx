@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { getApiUrl } from "../../../lib/api";
+import { getApiUrl, authFetch } from "../../../lib/api";
 import {
   ArrowLeft,
   Phone,
@@ -111,7 +111,7 @@ export default function LeadDetailPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/v1/leads/${leadId}/`);
+      const res = await authFetch(`${API_BASE}/api/v1/leads/${leadId}/`);
       if (!res.ok) throw new Error("Could not find lead record");
       const data = await res.json();
       setLead(data);
@@ -175,7 +175,7 @@ export default function LeadDetailPage() {
         };
       }
 
-      const res = await fetch(`${API_BASE}/api/v1/leads/${lead.id}/action/`, {
+      const res = await authFetch(`${API_BASE}/api/v1/leads/${lead.id}/action/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

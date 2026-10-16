@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { getApiUrl } from "../../lib/api";
+import { getApiUrl, authFetch } from "../../lib/api";
 import {
   Users,
   Search,
@@ -177,9 +177,9 @@ export default function CustomersPage() {
     setLoading(true);
     try {
       const [custRes, leadsRes, repairsRes] = await Promise.all([
-        fetch(`${API_BASE}/api/v1/customers/`),
-        fetch(`${API_BASE}/api/v1/leads/`),
-        fetch(`${API_BASE}/api/v1/repairs/`),
+        authFetch(`${API_BASE}/api/v1/customers/`),
+        authFetch(`${API_BASE}/api/v1/leads/`),
+        authFetch(`${API_BASE}/api/v1/repairs/`),
       ]);
 
       let leadsList: LeadHistoryItem[] = [];
@@ -345,7 +345,7 @@ export default function CustomersPage() {
     if (!name.trim() || !phone.trim()) return;
 
     try {
-      const res = await fetch(`${API_BASE}/api/v1/customers/`, {
+      const res = await authFetch(`${API_BASE}/api/v1/customers/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
