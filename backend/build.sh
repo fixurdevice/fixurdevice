@@ -14,4 +14,7 @@ python manage.py collectstatic --no-input
 echo "🗄️ Applying database migrations..."
 python manage.py migrate --no-input
 
+echo "🌱 Seeding initial database records (admin, staff, services)..."
+python seed_data.py
+
 echo "✅ Backend build finished successfully!"
